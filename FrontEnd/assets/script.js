@@ -1,5 +1,12 @@
 const gallery = document.querySelector(".gallery")
 const filter = document.getElementById("filter")
+const filterBtn = document.querySelectorAll("#filter button")
+document.addEventListener('DOMContentLoaded', function() {
+printWork()
+printFilter()
+
+})
+
 
 const printWork = () => {
 
@@ -21,25 +28,42 @@ const printWork = () => {
        
 
     })
+    .catch(error=>console.error("Error:",error))
+
 
 }
 
 const printFilter = ()=>{
-    filter.innerHTML=`<button>Tous</button>`
+    filter.innerHTML=`<button data-id="Tous">Tous</button>`
+  
     const categoriesSet = new Set();
 
     fetch("http://localhost:5678/api/categories")
     .then(response => response.json())
     .then(categories =>{
+        
         categories.forEach(element => {
             categoriesSet.add(element.name)
         })
         const categoriesArray = [...categoriesSet];
+     
         categoriesArray.forEach(categorie=>{
-            filter.innerHTML += `<button>${categorie}</button>`
+          
+            filter.innerHTML+=`<button data-id="${categorie}">${categorie}</button>`
+        
         })
 
     })
+    .catch(error=>console.error("Error:",error))
+
 }
-printWork()
-printFilter()
+
+
+filterBtn.forEach(button=>{
+    button.addEventListener("click",()=>{
+        if(button.dataset.id==="Tous"){
+            printWork()
+        }
+
+    })
+} )
