@@ -58,12 +58,34 @@ const printFilter = ()=>{
 
 }
 
+const printCategorie=(cat)=>{
+    gallery.innerHTML="";
+    fetch("http://localhost:5678/api/works")
+    .then(response =>response.json())
+    .then(works=>{
+        works.forEach(element =>{
+            if(element.category.name === cat){
+                gallery.innerHTML += `<figure><img src ="${element.imageUrl}" alt="${element.title}"
+                <figcaption>${element.title}</figcaption>
+                </figure>`
 
-filterBtn.forEach(button=>{
-    button.addEventListener("click",()=>{
-        if(button.dataset.id==="Tous"){
+            }
+        })
+    })
+}
+
+
+
+    
+    filter.addEventListener("click",(event)=>{
+        if(event.target.dataset.id==="Tous"){
+            console.log("test")
             printWork()
+        }
+        else{
+            console.log("test")
+            printCategorie(event.target.dataset.id)
         }
 
     })
-} )
+
