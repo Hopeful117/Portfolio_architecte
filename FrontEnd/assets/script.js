@@ -1,6 +1,7 @@
 const gallery = document.querySelector(".gallery")
 const filter = document.getElementById("filter")
 const filterBtn = document.querySelectorAll("#filter button")
+
 document.addEventListener('DOMContentLoaded', function() {
 printWork()
 printFilter()
@@ -10,8 +11,6 @@ printFilter()
 
 const printWork = () => {
 
-  
-
     fetch("http://localhost:5678/api/works")
     .then(response =>response.json())
     .then(works=>{
@@ -19,17 +18,11 @@ const printWork = () => {
             gallery.innerHTML += `<figure><img src ="${element.imageUrl}" alt="${element.title}"
             <figcaption>${element.title}</figcaption>
             </figure>`
-           
-
-
-            
-        });
-      
        
-
+        });
+    
     })
     .catch(error=>console.error("Error:",error))
-
 
 }
 
