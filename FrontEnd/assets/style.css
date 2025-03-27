@@ -121,10 +121,7 @@ li:hover {
 #introduction p {
 	margin-bottom: 0.5em;
 }
-#portfolio h2 {
-	text-align: center;
-	margin-bottom: 1em;
-}
+
 .gallery {
 	width: 100%;
 	display: grid;
@@ -231,5 +228,46 @@ footer nav ul {
 }
 .gallery img {
 	margin-bottom: 5px;
+}
+
+#edit-mode{
+	position: absolute;
+	top: 0;
+	left:0;
+	width: 100vw;
+	height:59px;
+	background-color: black;
+	color:white;
+	
+	justify-content: center;
+	align-items: center;
+	gap:5px;
+	margin-bottom: 100px;
+	display: none;
+}
+
+
+
+
+nav a {
+	text-decoration: none;
+	color:black;
+}
+
+#projet-title{
+	display: flex;
+	align-items: center;
+	gap:30px;
+	margin-bottom: 30px;
+	
+}
+
+#projet-title button{
+	display: none;
+	height: 18px;
+	border:none;
+	background-color: white;
+	gap:5px;
+	
 }
 

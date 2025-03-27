@@ -1,5 +1,9 @@
 
 const form = document.querySelector("form")
+document.addEventListener('DOMContentLoaded', function() {
+    clearPage()
+   
+    })
 
 
 form.addEventListener("submit",(event)=>{
@@ -26,6 +30,7 @@ const userLogin =(userEmail,userMdp)=>{
         if(!response.ok){
             alert("Email ou mot de passe incorrect")
         }
+        return response.json();
     })
     .then(data => {
         if (data.token){
@@ -40,4 +45,10 @@ const userLogin =(userEmail,userMdp)=>{
     .catch(error=> console.error("Erreur :", error))
    
    
+}
+
+const clearPage = () => {
+    document.getElementById("email").value ="";
+    document.getElementById("password").value="";
+    
 }

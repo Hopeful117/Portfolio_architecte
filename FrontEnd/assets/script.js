@@ -82,3 +82,30 @@ const printCategorie=(cat)=>{
 
     })
 
+
+    // Si l'utilisateur est connecté
+
+
+    if(localStorage.getItem("token"))
+{
+    const header=document.querySelector("header")
+    const editMode=document.getElementById("edit-mode")
+    const login=document.querySelector("#login a")
+    const gallery= document.querySelector(".gallery")
+    const editBtn=document.querySelector("#projet-title button")
+    
+    header.style.paddingTop = "50px";
+    editMode.style.display="flex";
+    editBtn.style.display="flex";
+    filter.style.display="none";
+    login.innerHTML ="logout";
+    login.href="#"
+    gallery.style.marginTop="50px";
+    
+
+    login.addEventListener("click",() =>{
+        localStorage.clear();
+        window.location.reload();
+    })
+    
+}
