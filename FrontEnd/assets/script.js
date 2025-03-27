@@ -93,6 +93,9 @@ const printCategorie=(cat)=>{
     const login=document.querySelector("#login a")
     const gallery= document.querySelector(".gallery")
     const editBtn=document.querySelector("#projet-title button")
+    const modale=document.querySelector("aside")
+    const overlay=document.getElementById("overlay")
+    const galleryMdl=document.getElementById("gallerie-modale")
     
     header.style.paddingTop = "50px";
     editMode.style.display="flex";
@@ -106,6 +109,26 @@ const printCategorie=(cat)=>{
     login.addEventListener("click",() =>{
         localStorage.clear();
         window.location.reload();
+    })
+
+    editBtn.addEventListener("click",()=>{
+        modale.style.display="flex";
+        overlay.style.display="block";
+
+        fetch("http://localhost:5678/api/works")
+        .then(response =>response.json())
+        .then(works=>{
+            works.forEach(element => {
+                galleryMdl.innerHTML += `<figure><img class="img-modale" src ="${element.imageUrl}" alt="${element.title}"
+               </figure>`
+           
+            });
+        
+        })
+        .catch(error=>console.error("Error:",error))
+    
+
+
     })
     
 }
