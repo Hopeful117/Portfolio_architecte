@@ -292,9 +292,11 @@ aside {
 
 aside h2{
 	color:black;
+	font-family:"Work Sans";
 	
-	font-weight: 700;
-	margin-top: 50px;
+	font-weight: 400;
+	font-size: 26px;
+	margin-top: 20px;
 }
 #overlay {
 	position: fixed; 
@@ -309,9 +311,9 @@ aside h2{
 
 
   .img-modale {
-	width:76px;
+	
 	height:102px;
-	margin-bottom: 20px;
+
   }
 
   #gallerie-modale{
@@ -320,8 +322,9 @@ aside h2{
 	flex-wrap: wrap;
 	display: flex;
 	
-	margin-left:100px;
-	margin-right:80px;
+	margin-left:80px;
+	margin-right:50px;
+	
 	margin-top: 50px;
 	margin-bottom: 50px;
 	
@@ -333,18 +336,82 @@ aside h2{
   .separator{
 	border:1px solid #b3b3b3;
 	width: 75%;
+	margin-bottom: 10px;
   }
 
-  aside input{
+  aside input[type="submit"]{
 	height:36px;
+	width:237px !important;
+	padding-left:50px;
+	padding-right:50px;
+	padding-top: 10px;
+	padding-bottom:10px;
+	text-align: center;
+	border: none;
 	
 	
   }
 
-  aside button{
+  #close{
 	position:relative !important;
 	background-color: white;
 	border: none;
 	left:280px;
 	top:20px;
+	
+	padding:10px;
   }
+
+  .trash{
+	z-index: 100;
+	position:relative;
+	top:-100px;
+	left:60px;
+	padding:2px;
+	
+
+	margin: 0;
+	
+	background-color: black;
+	
+  }
+
+  aside form {
+	display:none;
+	flex-direction: column;
+	margin: 20px;
+  }
+  aside input[type="text"],select {
+    height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+    width:379px;
+	background:white;
+	margin:20px;
+}
+
+#add-block{
+	display:none;
+	width:420px;
+	height:169px;
+	background-color: #E8F1F6;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap:10px;
+	margin:20px;
+}
+
+#add-block button {
+	border-radius: 50px;
+	width:173px;
+	height:36px;
+	background-color:#CBD6DC;
+	color:#306685;
+	font-weight:500;
+	font-family:"Work Sans";
+
+}
+
+  
