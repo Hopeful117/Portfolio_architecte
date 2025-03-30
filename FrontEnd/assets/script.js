@@ -1,6 +1,20 @@
 const gallery = document.querySelector(".gallery")
 const filter = document.getElementById("filter")
 const filterBtn = document.querySelectorAll("#filter button")
+const header=document.querySelector("header")
+const editMode=document.getElementById("edit-mode")
+const login=document.querySelector("#login a")
+const back=document.querySelector("#return")
+const editBtn=document.querySelector("#projet-title button")
+const modale=document.querySelector("aside")
+const overlay=document.getElementById("overlay")
+const galleryMdl=document.getElementById("gallerie-modale")
+const closeBtn=document.getElementById("close")
+const titleMdl=document.getElementById("title-modale")
+const form=document.querySelector("aside form")
+const select=document.querySelector("aside select")
+const mdlBtn=document.querySelector('[data-id="add-photo"]')
+const addBlock=document.getElementById("add-block")
 
 document.addEventListener('DOMContentLoaded', function() {
 printWork()
@@ -68,9 +82,6 @@ const printCategorie=(cat)=>{
     })
 }
 
-
-
-    
     filter.addEventListener("click",(event)=>{
         if(event.target.dataset.id==="Tous"){
             console.log("test")
@@ -89,20 +100,8 @@ const printCategorie=(cat)=>{
 
     if(localStorage.getItem("token"))
 {
-    const header=document.querySelector("header")
-    const editMode=document.getElementById("edit-mode")
-    const login=document.querySelector("#login a")
-    const gallery= document.querySelector(".gallery")
-    const editBtn=document.querySelector("#projet-title button")
-    const modale=document.querySelector("aside")
-    const overlay=document.getElementById("overlay")
-    const galleryMdl=document.getElementById("gallerie-modale")
-    const closeBtn=document.getElementById("close")
-    const titleMdl=document.getElementById("title-modale")
-    const form=document.querySelector("aside form")
-    const select=document.querySelector("aside select")
-    const mdlBtn=document.querySelector('[data-id="add-photo"]')
-    const addBlock=document.getElementById("add-block")
+   
+    
     
     header.style.paddingTop = "50px";
     editMode.style.display="flex";
@@ -118,30 +117,12 @@ const printCategorie=(cat)=>{
         window.location.reload();
     })
 
-    const printMdl = () => {
-
-        fetch("http://localhost:5678/api/works")
-        .then(response =>response.json())
-        .then(works=>{
-            works.forEach(element => {
-                galleryMdl.innerHTML += `<div>
-                <figure>
-                <img class="img-modale" src ="${element.imageUrl}" alt="${element.title}">
-               </figure>
-               <img class="trash" src="assets/icons/trash.png">
-               </div>`
-           
-            });
-        
-        })
-        .catch(error=>console.error("Error:",error))
-
-    }
+  
 
     // Si la modale est active
 
     editBtn.addEventListener("click",()=>{
-        const categoriesSet = new Set();
+        
         modale.style.display="flex";
         overlay.style.display="block";
         printMdl();
@@ -156,41 +137,117 @@ const printCategorie=(cat)=>{
             }
 
             if(event.target.dataset.id==="add-photo"){
-                titleMdl.innerHTML="Ajout photo"
-                galleryMdl.style.display="none"
-                form.style.display="flex"
-                mdlBtn.value="Valider"
-                addBlock.style.display="flex"
-                fetch("http://localhost:5678/api/categories")
-                .then(response => response.json())
-                .then(categories =>{
-                    
-                    categories.forEach(element => {
-                        categoriesSet.add(element.name)
-                    })
-                    const categoriesArray = [...categoriesSet];
-                 
-                    categoriesArray.forEach(categorie=>{
-                        let option = document.createElement("option");
-                        option.value=categorie
-                        option.textContent=categorie
-                        select.appendChild(option)
-                       
-                        
-                      
-                        
-                    
-                    })
-            
-                })
-                .catch(error=>console.error("Error:",error))
-
-
+                addPhotoMdl()
+       
             }
+           if(event.target.dataset.id && event.target.dataset.id.match(/[0-9]/g)){
+            deleteWork(event.target.dataset.id)
+            }
+
+           
         })
     
 
 
     })
     
+}
+
+const deleteWork = (id)=> {
+    const token = localStorage.getItem("token");
+    console.log(token)
+    fetch(`http://localhost:5678/api/works/${id}`,{
+          method:"DELETE",
+          headers:{
+            "Content-Type":"application/json",
+            "accept": "*/*",
+            "Authorization":`Bearer ${token}`
+    }})
+    .then(response => {
+        if(response.ok){
+            alert("Element supprimé !")
+        }
+        else{
+            alert("Erreur lors de la suppression")
+        }
+    })
+    .catch(error => console.error("Erreur:",error))
+
+  
+    }
+  
+
+const addPhotoMdl=()=>{
+    const categoriesSet = new Set();
+    titleMdl.innerHTML="Ajout photo";
+    galleryMdl.style.display="none";
+    form.style.display="flex";
+    mdlBtn.value="Valider";
+    addBlock.style.display="flex";
+    back.style.display="block";
+    back.addEventListener("click",()=>{
+        returnMdl();
+        
+        
+     
+    })
+    
+    fetch("http://localhost:5678/api/categories")
+    .then(response => response.json())
+    .then(categories =>{
+        
+        categories.forEach(element => {
+            categoriesSet.add(element.name)
+        })
+        const categoriesArray = [...categoriesSet];
+     
+        categoriesArray.forEach(categorie=>{
+            let option = document.createElement("option");
+            option.value=categorie
+            option.textContent=categorie
+            select.appendChild(option)
+           
+            
+          
+            
+        
+        })
+
+    })
+    .catch(error=>console.error("Error:",error))
+
+
+}
+
+const printMdl = () => {
+  
+
+    fetch("http://localhost:5678/api/works")
+    .then(response =>response.json())
+    .then(works=>{
+        works.forEach(element => {
+            galleryMdl.innerHTML += `<div>
+            <figure>
+            <img class="img-modale"  src ="${element.imageUrl}" alt="${element.title}">
+           </figure>
+           <img class="trash" src="assets/icons/trash.png" data-id="${element.id}">
+           </div>`
+       
+        });
+    
+    })
+    .catch(error=>console.error("Error:",error))
+
+}
+
+
+const returnMdl = ()=>{
+    titleMdl.innerText="Galerie photo";
+    form.style.display="none";
+    mdlBtn.value="Ajouter une photo";
+    addBlock.style.display="none";
+    back.style.display="none";
+    galleryMdl.style.display="flex";
+
+
 }
