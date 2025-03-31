@@ -19,6 +19,10 @@ const addFile=document.getElementById("add-file")
 const preview=document.getElementById("preview")
 const addLabel=document.querySelector(".add-block-btn")
 const addP=document.querySelector("#add-p")
+const token = localStorage.getItem("token");
+const formImg= document.getElementById("img-form")
+const imageTitle=document.getElementById("img-title")
+const toHide = document.getElementById("to-hide")
 
 document.addEventListener('DOMContentLoaded', function() {
 printWork()
@@ -88,11 +92,11 @@ const printCategorie=(cat)=>{
 
     filter.addEventListener("click",(event)=>{
         if(event.target.dataset.id==="Tous"){
-            console.log("test")
+            
             printWork()
         }
         else{
-            console.log("test")
+            
             printCategorie(event.target.dataset.id)
         }
 
@@ -130,6 +134,10 @@ const printCategorie=(cat)=>{
         modale.style.display="flex";
         overlay.style.display="block";
         printMdl();
+        returnMdl();
+        formImg.style.display="flex";
+        toHide.style.display="none";
+        
 
 
 
@@ -141,12 +149,31 @@ const printCategorie=(cat)=>{
             }
 
             if(event.target.dataset.id==="add-photo"){
-                addPhotoMdl()
+                event.preventDefault();
+                if(event.target.getAttribute("value")==="Ajouter une photo"){
+                    
+                    addPhotoMdl()
+                    
+                   
+                }
+                else{
+                    
+                    const formData= new FormData(formImg)
+                    for (let [key, value] of formData.entries()) {
+                        console.log(`${key}:`, value);
+                    }
+                    sendWork(formData)
+
+                }
+                
+                
        
             }
            if(event.target.dataset.id && event.target.dataset.id.match(/[0-9]/g)){
             deleteWork(event.target.dataset.id)
             }
+
+         
 
            
         })
@@ -158,8 +185,8 @@ const printCategorie=(cat)=>{
 }
 
 const deleteWork = (id)=> {
-    const token = localStorage.getItem("token");
-    console.log(token)
+ 
+   
     fetch(`http://localhost:5678/api/works/${id}`,{
           method:"DELETE",
           headers:{
@@ -182,7 +209,7 @@ const deleteWork = (id)=> {
   
 
 const addPhotoMdl=()=>{
-    const categoriesSet = new Set();
+   
     preview.src="assets/icons/picture.png"
     preview.style.width="76px"
     preview.style.height="76px"
@@ -194,6 +221,9 @@ const addPhotoMdl=()=>{
     addP.style.display="block";
     addBlock.style.display="flex";
     back.style.display="block";
+    imageTitle.value="";
+    toHide.style.display="flex";
+
     back.addEventListener("click",()=>{
         returnMdl();
         
@@ -223,35 +253,20 @@ const addPhotoMdl=()=>{
     }
 
     })
+    printOption()
     
-    fetch("http://localhost:5678/api/categories")
-    .then(response => response.json())
-    .then(categories =>{
-        
-        categories.forEach(element => {
-            categoriesSet.add(element.name)
-        })
-        const categoriesArray = [...categoriesSet];
-     
-        categoriesArray.forEach(categorie=>{
-            let option = document.createElement("option");
-            option.value=categorie
-            option.textContent=categorie
-            select.appendChild(option)
-           
-            
-          
-            
-        
-        })
-
-    })
-    .catch(error=>console.error("Error:",error))
+   
+    
+    const formData= new FormData(formImg,mdlBtn)
+   
+ 
+    
 
 
 }
 
 const printMdl = () => {
+   
   
 
     fetch("http://localhost:5678/api/works")
@@ -275,7 +290,8 @@ const printMdl = () => {
 
 const returnMdl = ()=>{
     titleMdl.innerText="Galerie photo";
-    form.style.display="none";
+    toHide.style.display="none";
+   
     mdlBtn.value="Ajouter une photo";
     addBlock.style.display="none";
     back.style.display="none";
@@ -283,3 +299,51 @@ const returnMdl = ()=>{
 
 
 }
+
+const sendWork=(form)=>{
+    console.log("hello")
+   
+     fetch("http://localhost:5678/api/works",{
+        method:"POST",
+        headers:{
+          
+            "Authorization":`Bearer ${token}`
+        },
+        body:form
+        })
+        .then(response => response.json()) // Convertir la réponse en JSON si l'API renvoie du JSON
+        .then(data => console.log("Réponse du serveur : ", data))
+        .catch(error => console.error("Error:", error));
+
+   
+     }
+
+
+     const printOption =() =>{
+        const categoriesSet = new Set();
+        fetch("http://localhost:5678/api/categories")
+        .then(response => response.json())
+        .then(categories =>{
+            
+            categories.forEach(element => {
+                categoriesSet.add(element)
+            })
+            
+            select.innerHTML=`<option value="none">Sélectionner une catégorie</option>`
+         
+            categoriesSet.forEach(categorie=>{
+                let option = document.createElement("option");
+                option.value=categorie.id
+                option.textContent=categorie.name
+                select.appendChild(option)
+               
+                
+              
+                
+            
+            })
+    
+        })
+        .catch(error=>console.error("Error:",error))
+
+     }

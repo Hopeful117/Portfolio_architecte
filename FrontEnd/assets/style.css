@@ -228,6 +228,7 @@ footer nav ul {
 }
 .gallery img {
 	margin-bottom: 5px;
+	height:407px;
 }
 
 #edit-mode{
@@ -313,6 +314,7 @@ aside h2{
   .img-modale {
 	
 	height:102px;
+	width:76px;
 
   }
 
@@ -335,7 +337,7 @@ aside h2{
 
   .separator{
 	border:1px solid #b3b3b3;
-	width: 75%;
+	width: 420px;
 	margin-bottom: 10px;
   }
 
@@ -431,6 +433,11 @@ aside h2{
 #add-file{
 	display:none;
 	
+}
+
+#to-hide{
+	display:flex;
+	flex-direction: column;
 }
 
   
