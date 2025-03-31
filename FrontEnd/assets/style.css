@@ -403,7 +403,7 @@ aside h2{
 	margin:20px;
 }
 
-#add-block button {
+.add-block-btn {
 	border-radius: 50px;
 	width:173px;
 	height:36px;
@@ -411,6 +411,9 @@ aside h2{
 	color:#306685;
 	font-weight:500;
 	font-family:"Work Sans";
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
 }
 
@@ -421,6 +424,12 @@ aside h2{
 	top:-11px;
 	position:relative;
 	display: none;
+	
+}
+
+
+#add-file{
+	display:none;
 	
 }
 

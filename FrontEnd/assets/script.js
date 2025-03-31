@@ -15,6 +15,10 @@ const form=document.querySelector("aside form")
 const select=document.querySelector("aside select")
 const mdlBtn=document.querySelector('[data-id="add-photo"]')
 const addBlock=document.getElementById("add-block")
+const addFile=document.getElementById("add-file")
+const preview=document.getElementById("preview")
+const addLabel=document.querySelector(".add-block-btn")
+const addP=document.querySelector("#add-p")
 
 document.addEventListener('DOMContentLoaded', function() {
 printWork()
@@ -179,10 +183,15 @@ const deleteWork = (id)=> {
 
 const addPhotoMdl=()=>{
     const categoriesSet = new Set();
+    preview.src="assets/icons/picture.png"
+    preview.style.width="76px"
+    preview.style.height="76px"
     titleMdl.innerHTML="Ajout photo";
     galleryMdl.style.display="none";
     form.style.display="flex";
     mdlBtn.value="Valider";
+    addLabel.style.display="flex";
+    addP.style.display="block";
     addBlock.style.display="flex";
     back.style.display="block";
     back.addEventListener("click",()=>{
@@ -190,6 +199,29 @@ const addPhotoMdl=()=>{
         
         
      
+    })
+    addFile.addEventListener("change",()=>{
+        if(addFile.files.length >0){
+            const file = addFile.files[0];
+            if(addFile.files.size> 41000000){
+                alert("Le fichier est trop volumineux")
+                addFile.value="";
+            }
+            else{
+                const reader = new FileReader();
+                reader.onload=function(e){
+                    preview.src=e.target.result
+                    preview.style.width="129px";
+                    preview.style.height="193px";
+                    addLabel.style.display="none";
+                    addP.style.display="none";
+
+                }
+                reader.readAsDataURL(file);
+
+            }
+    }
+
     })
     
     fetch("http://localhost:5678/api/categories")
