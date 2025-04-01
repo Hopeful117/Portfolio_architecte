@@ -151,23 +151,15 @@ const printCategorie=(cat)=>{
             if(event.target.dataset.id==="add-photo"){
                 event.preventDefault();
                 if(event.target.getAttribute("value")==="Ajouter une photo"){
+                    mdlBtn.disabled=false;
+                    mdlBtn.style.backgroundColor="#1D6154";
                     
                     addPhotoMdl()
                     
                    
                 }
-                else{
-                    
-                    const formData= new FormData(formImg)
-                    for (let [key, value] of formData.entries()) {
-                        console.log(`${key}:`, value);
-                    }
-                    sendWork(formData)
-
-                }
-                
-                
-       
+              
+          
             }
            if(event.target.dataset.id && event.target.dataset.id.match(/[0-9]/g)){
             deleteWork(event.target.dataset.id)
@@ -195,10 +187,8 @@ const deleteWork = (id)=> {
             "Authorization":`Bearer ${token}`
     }})
     .then(response => {
-        if(response.ok){
-            alert("Element supprimé !")
-        }
-        else{
+       
+        if(!response.ok){
             alert("Erreur lors de la suppression")
         }
     })
@@ -254,10 +244,34 @@ const addPhotoMdl=()=>{
 
     })
     printOption()
+
+    mdlBtn.disabled=true;
+    mdlBtn.style.backgroundColor="#A7A7A7"; 
+    formImg.addEventListener("change",(event)=>{
+        event.preventDefault();
+    
+        const formData= new FormData(formImg)
+  
+        if (formData.get("title") && formData.get("category")!=="none" && formData.get("image")) {
+            mdlBtn.disabled =false;
+            mdlBtn.style.backgroundColor="#1D6154";
+            mdlBtn.addEventListener("click",()=>{
+        
+               
+                sendWork(formData)
+            })
+           
+               
+        
+        }
+   
+
+    })
+   
     
    
     
-    const formData= new FormData(formImg,mdlBtn)
+ 
    
  
     
@@ -291,6 +305,9 @@ const printMdl = () => {
 const returnMdl = ()=>{
     titleMdl.innerText="Galerie photo";
     toHide.style.display="none";
+    mdlBtn.disabled=false;
+    mdlBtn.style.backgroundColor="#1D6154";
+                    
    
     mdlBtn.value="Ajouter une photo";
     addBlock.style.display="none";
@@ -311,7 +328,7 @@ const sendWork=(form)=>{
         },
         body:form
         })
-        .then(response => response.json()) // Convertir la réponse en JSON si l'API renvoie du JSON
+        .then(response => response.json()) 
         .then(data => console.log("Réponse du serveur : ", data))
         .catch(error => console.error("Error:", error));
 
@@ -347,3 +364,6 @@ const sendWork=(form)=>{
         .catch(error=>console.error("Error:",error))
 
      }
+
+
+    

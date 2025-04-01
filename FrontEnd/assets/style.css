@@ -88,11 +88,22 @@ nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
+	justify-content: space-between;
+	gap:30px;
 
 }
+
 nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
+}
+
+li a:hover{
+	font-weight: 700;
+}
+nav img {
+	height:22px;
+	width:22px;
 }
 
 li:hover {
@@ -181,6 +192,10 @@ footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	margin: 2em
+}
+input[type="submit"]:hover{
+	background-color: #0E2F28;
+
 }
 
 
