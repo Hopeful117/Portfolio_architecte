@@ -3,7 +3,7 @@ const form = document.querySelector("form")
 document.addEventListener('DOMContentLoaded', function() {
     clearPage()
    
-    })
+    });
 
 
 form.addEventListener("submit",(event)=>{
@@ -11,7 +11,7 @@ form.addEventListener("submit",(event)=>{
         email=event.target.querySelector("#email").value
         password=event.target.querySelector("#password").value
         userLogin(email,password)
-    })
+    });
 
 
 
@@ -45,7 +45,7 @@ const userLogin =(userEmail,userMdp)=>{
     .catch(error=> console.error("Erreur :", error))
    
    
-}
+};
 
 const clearPage = () => {
     document.getElementById("email").value ="";
