@@ -34,8 +34,8 @@ const userLogin =(userEmail,userMdp)=>{
     })
     .then(data => {
         if (data.token){
-            localStorage.setItem("token",data.token);
-            localStorage.setItem("userId",data.userId);
+            sessionStorage.setItem("token",data.token);
+            sessionStorage.setItem("userId",data.userId);
             window.location.href="index.html";
         }
         else {

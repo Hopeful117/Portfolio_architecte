@@ -106,7 +106,7 @@ const printCategorie=(cat)=>{
     // Si l'utilisateur est connecté
 
 
-    if(localStorage.getItem("token")){
+    if(sessionStorage.getItem("token")){
 
    
     
@@ -121,7 +121,7 @@ const printCategorie=(cat)=>{
     
 
     login.addEventListener("click",() =>{
-        localStorage.clear();
+        sessionStorage.clear();
         window.location.reload();
     })
 
