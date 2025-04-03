@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
    
     });
 
+
 //Listener sur le form
 form.addEventListener("submit",(event)=>{
         event.preventDefault()
@@ -34,7 +35,9 @@ const userLogin =(userEmail,userMdp)=>{
     })
     .then(data => {
         if (data.token){
+           
             sessionStorage.setItem("token",data.token);
+          
             sessionStorage.setItem("userId",data.userId);
             window.location.href="index.html";
         }

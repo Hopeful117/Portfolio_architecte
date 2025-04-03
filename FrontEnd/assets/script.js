@@ -19,16 +19,29 @@ const addFile=document.getElementById("add-file");
 const preview=document.getElementById("preview");
 const addLabel=document.querySelector(".add-block-btn");
 const addP=document.querySelector("#add-p");
-const token = localStorage.getItem("token");
+const token = sessionStorage.getItem("token");
 const formImg= document.getElementById("img-form");
 const imageTitle=document.getElementById("img-title");
 const toHide = document.getElementById("to-hide");
+const formContact=document.getElementById("formContact")
 
 document.addEventListener('DOMContentLoaded', function() {
 printWork()
 printFilter()
 
 });
+if (window.__liveReloadEnabled) {
+    console.warn("Désactivation de LiveReload !");
+    window.__liveReloadEnabled = false;
+    window.stop(); // Arrête tout chargement supplémentaire
+}
+
+
+formContact.addEventListener("submit",(event)=>{
+    event.preventDefault();
+})
+
+
 // Récupérer les travaux
 const printWork = () => {
     gallery.innerHTML="";
@@ -38,7 +51,7 @@ const printWork = () => {
     .then(works=>{
         localStorage.setItem("worksItem",JSON.stringify(works));
         works.forEach(element => {
-            gallery.innerHTML += `<figure><img src ="${element.imageUrl}" alt="${element.title}"
+            gallery.innerHTML += `<figure class="I${element.id}"><img src ="${element.imageUrl}" alt="${element.title}">
             <figcaption>${element.title}</figcaption>
             </figure>`
        
@@ -82,7 +95,7 @@ const printCategorie=(cat)=>{
    
         works.forEach(element =>{
             if(element.category.name === cat){
-                gallery.innerHTML += `<figure><img src ="${element.imageUrl}" alt="${element.title}"
+                gallery.innerHTML += `<figure class="I${element.id}"><img src ="${element.imageUrl}" alt="${element.title}">
                 <figcaption>${element.title}</figcaption>
                 </figure>`
 
@@ -93,10 +106,18 @@ const printCategorie=(cat)=>{
 //event listener sur la barre de filtre et réutilisation des fonctions
     
 filter.addEventListener("click",(event)=>{
+    gallery.innerHTML="";
         if(event.target.dataset.id==="Tous"){
+            works=JSON.parse(localStorage.getItem("worksItem"))
+            works.forEach(element => {
+                gallery.innerHTML += `<figure><img src ="${element.imageUrl}" alt="${element.title} class="I${element.id}"
+                <figcaption>${element.title}</figcaption>
+                </figure>`
+
             
-            printWork()
-        }
+            
+        })
+    }
         else{
             
             printCategorie(event.target.dataset.id)
@@ -144,6 +165,7 @@ filter.addEventListener("click",(event)=>{
 
 
         document.addEventListener("click",(event)=>{
+           
             if(event.target.id === "overlay" || event.target.id ==="close"){
                 modale.style.display="none";
                 overlay.style.display="none";
@@ -151,7 +173,7 @@ filter.addEventListener("click",(event)=>{
             };
 
             if(event.target.dataset.id==="add-photo"){
-                event.preventDefault();
+                
                 if(event.target.getAttribute("value")==="Ajouter une photo"){
                     mdlBtn.disabled=false;
                     mdlBtn.style.backgroundColor="#1D6154";
@@ -163,22 +185,18 @@ filter.addEventListener("click",(event)=>{
               
           
             };
-           if(event.target.dataset.id && event.target.dataset.id.match(/[0-9]/g)){
-            deleteWork(event.target.dataset.id)
-            };
-
-         
-
-           
+        
         });
     
 
 
     });
+      
     
 
 
 const deleteWork = (id)=> {
+
  
    
     fetch(`http://localhost:5678/api/works/${id}`,{
@@ -193,6 +211,18 @@ const deleteWork = (id)=> {
         if(!response.ok){
             alert("Erreur lors de la suppression")
         }
+        else{
+            
+            const item =document.querySelectorAll(`.I${id}`)
+            item.forEach(element=>element.remove())
+            modale.style.display="none";
+            overlay.style.display="none";
+            const works = JSON.parse(localStorage.getItem("worksItem"));
+            const updatedWorks = works.filter(work => work.id !== parseInt(id)); 
+            localStorage.setItem("worksItem", JSON.stringify(updatedWorks));
+            
+        }
+
     })
     .catch(error => console.error("Erreur:",error))
 
@@ -215,6 +245,7 @@ const addPhotoMdl=()=>{
     back.style.display="block";
     imageTitle.value="";
     toHide.style.display="flex";
+    
 
     back.addEventListener("click",()=>{
         returnMdl();
@@ -251,28 +282,41 @@ const addPhotoMdl=()=>{
     mdlBtn.style.backgroundColor="#A7A7A7"; 
     formImg.addEventListener("change",checkFormCompletion);
     formImg.addEventListener("input",checkFormCompletion);
-    mdlBtn.addEventListener("click",()=>{
+    formImg.addEventListener("submit",(event)=>{
+        event.preventDefault();
+        console.log("hello")
         const formData= new FormData(formImg);
         sendWork(formData);
+       
+       
+    
     })
+   
+    
        
 
 }
 
 const printMdl = () => {
+    galleryMdl.innerHTML="";
+   
     const works=JSON.parse(localStorage.getItem("worksItem"))
    
-  
-
-    
         works.forEach(element => {
-            galleryMdl.innerHTML += `<div>
+            galleryMdl.innerHTML += `<div class="I${element.id}">
             <figure>
-            <img class="img-modale"  src ="${element.imageUrl}" alt="${element.title}">
+            <img class="img-modale" src ="${element.imageUrl}" alt="${element.title}">
            </figure>
-           <img class="trash" src="assets/icons/trash.png" data-id="${element.id}">
+           <img class="trash I${element.id}" src="assets/icons/trash.png" data-id="${element.id}">
            </div>`
        
+        })
+        galleryMdl.addEventListener("click",(event)=>{
+        if(event.target.dataset.id && event.target.dataset.id.match(/[0-9]/g)){
+            
+           
+            deleteWork(event.target.dataset.id)
+            };
         })
     
     }
@@ -297,6 +341,8 @@ const returnMdl = ()=>{
 }
 
 const sendWork=(form)=>{
+   
+   
     
    
      fetch("http://localhost:5678/api/works",{
@@ -304,15 +350,21 @@ const sendWork=(form)=>{
         headers:{
           
             "Authorization":`Bearer ${token}`
+            
         },
         body:form
         })
-        .then(response => response.json()) 
-        .then(data => console.log("Réponse du serveur : ", data))
+        .then(response =>response.JSON)
+        .then(data => console.log(data))
+           
+        
+           
+         
         .catch(error => console.error("Error:", error));
 
    
      };
+     
 
 
      const printOption =() =>{
