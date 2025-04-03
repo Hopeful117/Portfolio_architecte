@@ -29,14 +29,14 @@ printWork()
 printFilter()
 
 });
-
-
+// Récupérer les travaux
 const printWork = () => {
     gallery.innerHTML="";
 
     fetch("http://localhost:5678/api/works")
     .then(response =>response.json())
     .then(works=>{
+        localStorage.setItem("worksItem",JSON.stringify(works));
         works.forEach(element => {
             gallery.innerHTML += `<figure><img src ="${element.imageUrl}" alt="${element.title}"
             <figcaption>${element.title}</figcaption>
@@ -48,7 +48,7 @@ const printWork = () => {
     .catch(error=>console.error("Error:",error))
 
 };
-
+// Récupérer les catégories pour créer les bouttons
 const printFilter = ()=>{
     filter.innerHTML=`<button data-id="Tous">Tous</button>`;
   
@@ -57,6 +57,7 @@ const printFilter = ()=>{
     fetch("http://localhost:5678/api/categories")
     .then(response => response.json())
     .then(categories =>{
+        localStorage.setItem("categoriesItem",JSON.stringify(categories))
         
         categories.forEach(element => {
             categoriesSet.add(element.name)
@@ -73,12 +74,12 @@ const printFilter = ()=>{
     .catch(error=>console.error("Error:",error))
 
 };
-
+//afficher les éléments de la catégorie mise en paramètre
 const printCategorie=(cat)=>{
     gallery.innerHTML="";
-    fetch("http://localhost:5678/api/works")
-    .then(response =>response.json())
-    .then(works=>{
+    const works=JSON.parse(localStorage.getItem("worksItem"))
+    
+   
         works.forEach(element =>{
             if(element.category.name === cat){
                 gallery.innerHTML += `<figure><img src ="${element.imageUrl}" alt="${element.title}"
@@ -87,10 +88,11 @@ const printCategorie=(cat)=>{
 
             }
         })
-    })
-};
+    }
 
-    filter.addEventListener("click",(event)=>{
+//event listener sur la barre de filtre et réutilisation des fonctions
+    
+filter.addEventListener("click",(event)=>{
         if(event.target.dataset.id==="Tous"){
             
             printWork()
@@ -103,7 +105,7 @@ const printCategorie=(cat)=>{
     });
 
 
-    // Si l'utilisateur est connecté
+    // ***********************************************************Si l'utilisateur est connecté*********************************************************************
 
 
     if(sessionStorage.getItem("token")){
@@ -174,7 +176,7 @@ const printCategorie=(cat)=>{
 
     });
     
-};
+
 
 const deleteWork = (id)=> {
  
@@ -254,25 +256,15 @@ const addPhotoMdl=()=>{
         sendWork(formData);
     })
        
-   
-    
-   
-    
- 
-   
- 
-    
-
 
 }
 
 const printMdl = () => {
+    const works=JSON.parse(localStorage.getItem("worksItem"))
    
   
 
-    fetch("http://localhost:5678/api/works")
-    .then(response =>response.json())
-    .then(works=>{
+    
         works.forEach(element => {
             galleryMdl.innerHTML += `<div>
             <figure>
@@ -283,10 +275,10 @@ const printMdl = () => {
        
         })
     
-    })
-    .catch(error=>console.error("Error:",error))
+    }
+    
 
-};
+
 
 
 const returnMdl = ()=>{
@@ -324,34 +316,21 @@ const sendWork=(form)=>{
 
 
      const printOption =() =>{
-        const categoriesSet = new Set();
-        fetch("http://localhost:5678/api/categories")
-        .then(response => response.json())
-        .then(categories =>{
-            
-            categories.forEach(element => {
-                categoriesSet.add(element);
-            })
-            
+        const categories=JSON.parse(localStorage.getItem("categoriesItem"))
+      
             select.innerHTML=`<option value="none">Sélectionner une catégorie</option>`;
          
-            categoriesSet.forEach(categorie=>{
+            categories.forEach(categorie=>{
                 let option = document.createElement("option");
                 option.value=categorie.id;
                 option.textContent=categorie.name;
                 select.appendChild(option);
                
-                
-              
-                
-            
+
             })
     
-        })
-        .catch(error=>console.error("Error:",error))
-
-     };
-
+        }
+        
 
      const checkFormCompletion = () => {
         const formData = new FormData(formImg);
@@ -367,3 +346,5 @@ const sendWork=(form)=>{
             mdlBtn.style.backgroundColor = "#A7A7A7";
         }
     };
+
+    }

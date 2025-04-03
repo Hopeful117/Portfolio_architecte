@@ -1,11 +1,11 @@
-
+//Le formulaire est vidé à chaque chargement
 const form = document.querySelector("form")
 document.addEventListener('DOMContentLoaded', function() {
     clearPage()
    
     });
 
-
+//Listener sur le form
 form.addEventListener("submit",(event)=>{
         event.preventDefault()
         email=event.target.querySelector("#email").value
@@ -14,7 +14,7 @@ form.addEventListener("submit",(event)=>{
     });
 
 
-
+//fonction pour verifier le login par l'api
 const userLogin =(userEmail,userMdp)=>{
     fetch("http://localhost:5678/api/users/login",{
         method:"POST",
