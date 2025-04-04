@@ -25,9 +25,17 @@ const imageTitle=document.getElementById("img-title");
 const toHide = document.getElementById("to-hide");
 const formContact=document.getElementById("formContact")
 
+
+
+
 document.addEventListener('DOMContentLoaded', function() {
 printWork()
 printFilter()
+if(localStorage.getItem("buffer")){
+    localStorage.setItem('buffer', JSON.stringify([]));
+
+}
+
 
 });
 if (window.__liveReloadEnabled) {
@@ -284,9 +292,11 @@ const addPhotoMdl=()=>{
     formImg.addEventListener("input",checkFormCompletion);
     formImg.addEventListener("submit",(event)=>{
         event.preventDefault();
-        console.log("hello")
+        
         const formData= new FormData(formImg);
         sendWork(formData);
+        returnMdl()
+        printMdl()
        
        
     
@@ -301,6 +311,9 @@ const printMdl = () => {
     galleryMdl.innerHTML="";
    
     const works=JSON.parse(localStorage.getItem("worksItem"))
+  
+    
+   
    
         works.forEach(element => {
             galleryMdl.innerHTML += `<div class="I${element.id}">
@@ -311,6 +324,20 @@ const printMdl = () => {
            </div>`
        
         })
+        if(localStorage.getItem("buffer")){
+        const bufferArr=JSON.parse(localStorage.getItem("buffer"))
+       
+        bufferArr.forEach(img=>{
+            galleryMdl.innerHTML += `<div class="I${img.id}">
+            <figure>
+            <img class="img-modale" src ="${img.imageUrl}" alt="${img.title}">
+           </figure>
+           <img class="trash I${img.id}" src="assets/icons/trash.png" data-id="${img.id}">
+           </div>`
+        
+
+        })
+    }
         galleryMdl.addEventListener("click",(event)=>{
         if(event.target.dataset.id && event.target.dataset.id.match(/[0-9]/g)){
             
@@ -354,8 +381,42 @@ const sendWork=(form)=>{
         },
         body:form
         })
-        .then(response =>response.JSON)
-        .then(data => console.log(data))
+        .then(response =>response.json())
+        .then(data =>{
+            modale.style.display="none";
+            overlay.style.display="none";
+           
+                gallery.innerHTML += `<figure class="I${data.id}"><img src ="${data.imageUrl}" alt="${data.title}">
+                <figcaption>${data.title}</figcaption>
+                </figure>`
+                
+             
+                
+               
+                let bufferArr = [];
+
+                const bufferStr = localStorage.getItem("buffer");
+                
+                if (bufferStr) {
+                  try {
+                    bufferArr = JSON.parse(bufferStr);
+                  } catch (e) {
+                    console.error("Données corrompues dans localStorage → 'buffer'", e);
+                    bufferArr = [];
+                  }
+                }
+                
+                bufferArr.push(data);
+                localStorage.setItem("buffer", JSON.stringify(bufferArr));
+                
+                
+
+
+            
+           
+            
+
+        })
            
         
            
@@ -398,5 +459,8 @@ const sendWork=(form)=>{
             mdlBtn.style.backgroundColor = "#A7A7A7";
         }
     };
+
+    }
+    const clearForm= ()=>{
 
     }
