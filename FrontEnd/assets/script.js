@@ -41,7 +41,7 @@ if(localStorage.getItem("buffer")){
 if (window.__liveReloadEnabled) {
     console.warn("Désactivation de LiveReload !");
     window.__liveReloadEnabled = false;
-    window.stop(); // Arrête tout chargement supplémentaire
+    
 }
 
 
