@@ -223,8 +223,7 @@ const deleteWork = (id)=> {
             
             const item =document.querySelectorAll(`.I${id}`)
             item.forEach(element=>element.remove())
-            modale.style.display="none";
-            overlay.style.display="none";
+          
             const works = JSON.parse(localStorage.getItem("worksItem"));
             const updatedWorks = works.filter(work => work.id !== parseInt(id)); 
             localStorage.setItem("worksItem", JSON.stringify(updatedWorks));
@@ -290,18 +289,20 @@ const addPhotoMdl=()=>{
     mdlBtn.style.backgroundColor="#A7A7A7"; 
     formImg.addEventListener("change",checkFormCompletion);
     formImg.addEventListener("input",checkFormCompletion);
-    formImg.addEventListener("submit",(event)=>{
-        event.preventDefault();
-        
-        const formData= new FormData(formImg);
-        sendWork(formData);
-        returnMdl()
-        printMdl()
-       
-       
+    if (!formImg.dataset.listenerAdded) {
+        formImg.addEventListener("submit", (event)=>{
+            event.preventDefault();
+            
+            const formData = new FormData(formImg);
+            console.log("soumis");
+            sendWork(formData);
+            returnMdl();
+            printMdl();
+        });
     
-    })
-   
+        formImg.dataset.listenerAdded = "true"; // évite les doublons
+    }
+    
     
        
 
@@ -325,7 +326,7 @@ const printMdl = () => {
        
         })
         if(localStorage.getItem("buffer")){
-        const bufferArr=JSON.parse(localStorage.getItem("buffer"))
+        let bufferArr=JSON.parse(localStorage.getItem("buffer"))
        
         bufferArr.forEach(img=>{
             galleryMdl.innerHTML += `<div class="I${img.id}">
@@ -461,6 +462,4 @@ const sendWork=(form)=>{
     };
 
     }
-    const clearForm= ()=>{
-
-    }
+    
