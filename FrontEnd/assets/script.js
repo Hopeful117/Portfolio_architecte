@@ -112,6 +112,8 @@ const printCategorie=(cat)=>{
     }
 
 //event listener sur la barre de filtre et réutilisation des fonctions
+//Si sur tous on affiche tous les elements à partir du locale storage
+//Sinon appel de la fonction au dessus
     
 filter.addEventListener("click",(event)=>{
     gallery.innerHTML="";
@@ -227,6 +229,10 @@ const deleteWork = (id)=> {
             const works = JSON.parse(localStorage.getItem("worksItem"));
             const updatedWorks = works.filter(work => work.id !== parseInt(id)); 
             localStorage.setItem("worksItem", JSON.stringify(updatedWorks));
+
+            const buffArr = JSON.parse(localStorage.getItem("buffer"))
+            const updatedBuffer = buffArr.filter(el=>el.id !== parseInt(id))
+            localStorage.setItem("buffer",JSON.stringify(updatedBuffer))
             
         }
 
