@@ -71,7 +71,7 @@ const printWork = () => {
 };
 // Récupérer les catégories pour créer les bouttons
 const printFilter = ()=>{
-    filter.innerHTML=`<button data-id="Tous">Tous</button>`;
+    filter.innerHTML=`<button data-id="Tous" class="active">Tous</button>`;
   
     const categoriesSet = new Set();
 
@@ -116,6 +116,8 @@ const printCategorie=(cat)=>{
 //Sinon appel de la fonction au dessus
     
 filter.addEventListener("click",(event)=>{
+const activeBtn=document.querySelector(".active");
+activeBtn.classList.remove("active");
     gallery.innerHTML="";
         if(event.target.dataset.id==="Tous"){
             works=JSON.parse(localStorage.getItem("worksItem"))
@@ -123,6 +125,7 @@ filter.addEventListener("click",(event)=>{
                 gallery.innerHTML += `<figure><img src ="${element.imageUrl}" alt="${element.title} class="I${element.id}"
                 <figcaption>${element.title}</figcaption>
                 </figure>`
+                event.target.classList.add("active")
 
             
             
@@ -131,6 +134,7 @@ filter.addEventListener("click",(event)=>{
         else{
             
             printCategorie(event.target.dataset.id)
+            event.target.classList.add("active")
         }
 
     });
@@ -225,10 +229,12 @@ const deleteWork = (id)=> {
             
             const item =document.querySelectorAll(`.I${id}`)
             item.forEach(element=>element.remove())
+            //update local storage
           
             const works = JSON.parse(localStorage.getItem("worksItem"));
             const updatedWorks = works.filter(work => work.id !== parseInt(id)); 
             localStorage.setItem("worksItem", JSON.stringify(updatedWorks));
+            //update buffer
 
             const buffArr = JSON.parse(localStorage.getItem("buffer"))
             const updatedBuffer = buffArr.filter(el=>el.id !== parseInt(id))
@@ -269,8 +275,12 @@ const addPhotoMdl=()=>{
     addFile.addEventListener("change",()=>{
         if(addFile.files.length >0){
             const file = addFile.files[0];
-            if(addFile.files.size> 41000000){
+            if(file.size> 41000000){
                 alert("Le fichier est trop volumineux")
+                addFile.value="";
+            }
+            if(file.type != "image/png" || file.type !="image/jpg"){
+                alert("Veuillez insérer une image")
                 addFile.value="";
             }
             else{

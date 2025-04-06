@@ -220,10 +220,11 @@ input[type="submit"]:hover{
 	
 }
 
-#filter button:hover{
+#filter button:hover,#filter button.active{
 	color: white;
 	background-color: #1D6154;
 }
+
 
 #portfolio{
 	display: flex;

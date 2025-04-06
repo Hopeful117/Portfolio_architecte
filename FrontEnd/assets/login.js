@@ -41,9 +41,7 @@ const userLogin =(userEmail,userMdp)=>{
             sessionStorage.setItem("userId",data.userId);
             window.location.href="index.html";
         }
-        else {
-            alert("L'authentification à echoué")
-        }
+      
     })
     .catch(error=> console.error("Erreur :", error))
    
