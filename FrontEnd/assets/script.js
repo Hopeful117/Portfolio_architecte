@@ -278,10 +278,12 @@ const addPhotoMdl=()=>{
             if(file.size> 41000000){
                 alert("Le fichier est trop volumineux")
                 addFile.value="";
+                return;
             }
-            if(file.type != "image/png" || file.type !="image/jpg"){
+            if(file.type !=="image/png" && file.type !=="image/jpeg"){
                 alert("Veuillez insérer une image")
                 addFile.value="";
+                return;
             }
             else{
                 const reader = new FileReader();
